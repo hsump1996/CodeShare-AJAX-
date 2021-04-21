@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const app = express();
 const CodeSnippet = require('./db');
 const bodyParser = require('body-parser');
@@ -16,9 +17,18 @@ app.post('/code_snippets/:id/comments/', (req, res) => {
 
 });
 
-app.get('/code_snippets/', (req, res) => {
-
-});
+app.get('/code_snippets/', function(req, res) {
+    CodeSnippet.find({}, function(err, result, count) {
+      res.json(result.map(function(ele) {
+        return {
+          '_id': ele._id,
+          'title': ele.title,
+          'code': ele.code,
+          'comment': ele.comments
+        }; 
+      }));
+    });
+  });
 
 const port = 3000;
 

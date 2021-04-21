@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const CodeSnippetSchema = mongoose.Schema({
+  _id: String,
   title: String,
   code: String,
   comments: [String]
