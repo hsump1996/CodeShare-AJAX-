@@ -9,30 +9,37 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/code_snippets/', (req, res) => {
-
-    const codeSnippet = new CodeSnippet({
-        _id: mongoose.Types.ObjectId(),
+    CodeSnippet.create({
         title: req.body.title,
         code: req.body.code,
-        comments: req.body.comments
+        comments: []
     });
-
-    codeSnippet.save(function(err, codeSnippet){
-
-        if(err){
-            res.json({error: err.message});
-        }
-        else{
-            res.json(codeSnippet);
-        }
-    });
-
 });
 
 app.post('/code_snippets/:id/comments/', (req, res) => {
-
-
-});
+    CodeSnippet.findByIdAndUpdate(req.params["id"], {
+          "$push": {
+             comments: req.body["comment"]
+          }
+       }, {
+          "new": true
+       },
+       (err, docs) => {
+          if (err) {
+             res.json({
+                "error": "The comment was not successfully added."
+             });
+          } else {
+             res.json({
+                "message": "Change was successful",
+                "docs": docs
+             });
+          }
+       }
+    );
+ 
+ });
+ 
 
 app.get('/code_snippets/', function(req, res) {
     CodeSnippet.find({}, function(err, result, count) {
