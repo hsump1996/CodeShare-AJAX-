@@ -10,6 +10,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/code_snippets/', (req, res) => {
 
+    const codeSnippet = new CodeSnippet({
+        _id: mongoose.Types.ObjectId(),
+        title: req.body.title,
+        code: req.body.code,
+        comments: req.body.comments
+    });
+
+    codeSnippet.save(function(err, codeSnippet){
+
+        if(err){
+            res.json({error: err.message});
+        }
+        else{
+            res.json(codeSnippet);
+        }
+    });
+
 });
 
 app.post('/code_snippets/:id/comments/', (req, res) => {
