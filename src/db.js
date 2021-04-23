@@ -6,6 +6,6 @@ const CodeSnippetSchema = mongoose.Schema({
   comments: [String]
 });
 
-mongoose.connect('mongodb://localhost/hw08', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/hw08', { useNewUrlParser: true, useUnifiedTopology: true });
 
 module.exports = Post = mongoose.model("CodeSnippet", CodeSnippetSchema);
