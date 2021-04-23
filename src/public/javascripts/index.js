@@ -38,46 +38,56 @@ function getCode(url) {
                 main.appendChild(commentButton);
 
                 let commentButton2 = document.getElementsByClassName('createComment');
-
-                for (let i = 0; i < commentButton2.length; i++) {
             
+                for (let i = 0; i < commentButton2.length; i++) {
+
                     commentButton2[i].addEventListener('click', function() {
+
+                        let hidden = document.getElementById('code-snippet-id');
+
+                        const id = data._id;
+                            
+                        hidden.id =  `${id}`;
 
                         const modal = document.getElementsByClassName("modal")[1];
 
                         modal.style.display = "inline";
 
-                        let hidden = document.getElementById('code-snippet-id');
-                        hidden.id = `${data._id}`;
+                        document.getElementById("create-comment").addEventListener('click', function(event) {
 
-                        document.getElementById("create-code-snippet").addEventListener('click', function(event) {
+                            event.preventDefault();
 
                             let comment = document.getElementById('comment-text').value;
 
-                            let id = document.getElementById('code-snippet-id').value;
-
-                            const url = 'http://localhost:3000/code_snippets/:id/comments/';
+                            const url = 'http://localhost:3000/code_snippets/' + id + '/comments/';
 
                             const xhr = new XMLHttpRequest();
-                        
-                            //Use an AJAX POST to send the Code Snippet's text to the server
                             
+                            //Use an AJAX POST to send the Code Snippet's text to the server
+                                
                             xhr.open('POST', url, true);
 
-
                             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                            
+                                
                             xhr.send('id=' + id + '&' + 'comment=' + comment);
 
                             xhr.addEventListener('error', function(e) {
-                                document.body.appendChild(document.createTextNode('uh-oh, something went wrong ' + e));
+                                    document.body.appendChild(document.createTextNode('uh-oh, something went wrong ' + e));
                             });
 
+                            location.reload();
+
+                            modal.style.display = "None";
+                        });
+
+                        document.querySelector(".close").addEventListener('click', function(event) {
+
+                            modal.style.display = "None";
+                    
                         });
 
                     });
                 }
-
             };
 
         } else {
