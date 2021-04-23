@@ -29,25 +29,93 @@ function getCode(url) {
                 ul.textContent = data.comment;
 
                 const commentButton = document.createElement("button");
-                commentButton.setAttribute("id", "createComment");
+                commentButton.setAttribute("class", "createComment");
                 commentButton.appendChild(document.createTextNode("Comment"));
 
                 main.appendChild(h4);
                 main.appendChild(pre);
                 main.appendChild(ul);
                 main.appendChild(commentButton);
+
+                let commentButton2 = document.getElementsByClassName('createComment');
+
+                for (let i = 0; i < commentButton2.length; i++) {
+            
+                    commentButton2[i].addEventListener('click', function() {
+
+                        const modal = document.getElementsByClassName("modal")[1];
+
+                        modal.style.display = "inline";
+
+                        let hidden = document.getElementById('code-snippet-id');
+                        hidden.id = `${data._id}`;
+
+                        document.getElementById("create-code-snippet").addEventListener('click', function(event) {
+
+                            let comment = document.getElementById('comment-text').value;
+
+                            let id = document.getElementById('code-snippet-id').value;
+
+                            const url = 'http://localhost:3000/code_snippets/:id/comments/';
+
+                            const xhr = new XMLHttpRequest();
+                        
+                            //Use an AJAX POST to send the Code Snippet's text to the server
+                            
+                            xhr.open('POST', url, true);
+
+
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                            
+                            xhr.send('id=' + id + '&' + 'comment=' + comment);
+
+                            xhr.addEventListener('error', function(e) {
+                                document.body.appendChild(document.createTextNode('uh-oh, something went wrong ' + e));
+                            });
+
+                        });
+
+                    });
+                }
+
             };
+
         } else {
             console.log('error', req.status);
         }
-    });
 
+        // let commentButton = document.getElementsByClassName('createComment');
+
+        // for (let i = 0; i < commentButton.length; i++) {
+            
+        //     commentButton[i].addEventListener('click', function() {
+
+        //         const modal = document.getElementsByClassName("modal")[1];
+
+        //         modal.style.display = "inline";
+
+
+        //         document.getElementById('code-snippet-id').id = "";
+
+        //         const url = 'http://localhost:3000/code_snippets/:id/comments/';
+
+        //         const xhr = new XMLHttpRequest();
+            
+        //         //Use an AJAX POST to send the Code Snippet's text to the server
+        //         xhr.open('POST', url, true);
+
+
+        //     });
+        // }
+    
+    });
+                
     req.addEventListener('error', function() {
         console.log('error');
     });
-
+    
     req.send();
-}
+};
 
 
 function postCodeSnippet() {
@@ -56,9 +124,17 @@ function postCodeSnippet() {
 
     modal.style.display = "inline";
 
+    btnss = document.querySelectorAll('#createComment');
+
+    console.log(btnss);
+
     document.getElementById("create-code-snippet").addEventListener('click', function(event) {
 
         event.preventDefault();
+
+        btnss = document.querySelectorAll('#createComment');
+
+        console.log(btnss);
 
         //Collect the form data(just the Code Snippet's text)
         let code = document.getElementById('code-snippet-code').value;
@@ -88,34 +164,36 @@ function postCodeSnippet() {
         document.getElementById('code-snippet-title').value = "";
     
     });
+
+
+    document.querySelector(".close").addEventListener('click', function(event) {
+
+        modal.style.display = "None";
+
+    });
 };
 
-function commentButton(event) {
-
+function addComment(event) {
     event.preventDefault();
 
+    const modal = document.getElementsByClassName("modal")[1];
 
-    const modal2 = document.getElementsByClassName("modal")[1];
+    modal.style.display = "inline";
 
-    modal2.style.display = "inline";
 
-    modal.style.display = "";
 
-};
-
+}
 
 
 function main() {
 
     const url = 'http://localhost:3000/code_snippets';
     getCode(url);
-        
+    
     const addCodeSnippet = document.getElementById("btn-show-modal-code-snippet");
-    const addComment = document.getElementById('createComment');
+
 
     addCodeSnippet.addEventListener('click', postCodeSnippet);
-    addComment.addEventListener('click', commentButton);
-
 
 }
 
